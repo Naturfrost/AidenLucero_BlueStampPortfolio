@@ -1,4 +1,4 @@
-# ESP32 Weather Station
+  # ESP32 Weather Station
 The ESP32 Weather Station is an open-source weather monitoring system which uses wireless/environmental sensors to collect and display data on weather as well as air quality.This system is built around the ESP32 microcontroller and can be connected using WiFI. 
 
 You should comment out all portions of your portfolio that you have not completed yet, as well as any instructions:
