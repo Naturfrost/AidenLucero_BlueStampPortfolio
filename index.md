@@ -44,7 +44,7 @@ For your second milestone, explain what you've worked on since your previous mil
 # First Milestone
 
 Successfully set up the ESP32 development environment while getting the hardware and sensors to work
-
+https://youtu.be/NzX8GpwYkMw?si=XQsiVzK3EKYiUTat
 <iframe width="560" height="315" src="https://www.youtube.com/embed/CaCazFBhYKs" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
 
 For your first milestone, describe what your project is and how you plan to build it. You can include:
