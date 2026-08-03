@@ -33,7 +33,6 @@ For your final milestone, explain the outcome of your project. Key details to in
 
 Make the weather station connected to WiFi, displaying live weather data inside a web server hoster by ESP32
 https://youtu.be/KzbRhaN9ozo?si=OARWozjAMMT7sy9H
-<iframe width="560" height="315" src="https://www.youtube.com/embed/y3VAmNlER5Y" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
 
 Summary:
 - Used LDR and Humidity sensor to detect light / weather activity
@@ -46,11 +45,12 @@ Summary:
 
 Successfully set up the ESP32 development environment while getting the hardware and sensors to work
 https://youtu.be/NzX8GpwYkMw?si=XQsiVzK3EKYiUTat
-<iframe width="560" height="315" src="https://www.youtube.com/embed/CaCazFBhYKs" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+
 Summary:
 -Got ESP32 web server working on a public ip where you can control the OLED lights
 -Turns on/off lights on demand using clickable buttons
-- Challenges with connecting the WiFi but solved through hotspot allowing for closer range
+-Challenges with connecting the WiFi but solved through hotspot allowing for closer range
+-Planning to continue development of the web server using weather data
 
 # Schematics 
 Here's where you'll put images of your schematics. [Tinkercad](https://www.tinkercad.com/blog/official-guide-to-tinkercad-circuits) and [Fritzing](https://fritzing.org/learning/) are both great resoruces to create professional schematic diagrams, though BSE recommends Tinkercad becuase it can be done easily and for free in the browser. 
