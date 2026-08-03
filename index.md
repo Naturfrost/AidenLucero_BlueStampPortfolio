@@ -32,14 +32,15 @@ For your final milestone, explain the outcome of your project. Key details to in
 # Second Milestone
 
 Make the weather station connected to WiFi, displaying live weather data inside a web server hoster by ESP32
-
+https://youtu.be/KzbRhaN9ozo?si=OARWozjAMMT7sy9H
 <iframe width="560" height="315" src="https://www.youtube.com/embed/y3VAmNlER5Y" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
 
-For your second milestone, explain what you've worked on since your previous milestone. You can highlight:
-- Technical details of what you've accomplished and how they contribute to the final goal
-- What has been surprising about the project so far
-- Previous challenges you faced that you overcame
-- What needs to be completed before your final milestone 
+Summary:
+- Used LDR and Humidity sensor to detect light / weather activity
+- A few problems occurred with the sensors not picking up enough data
+- Reworked code and schematics helped fix the data issue
+- The web server (once activated) tracks light level, temperature, and humidity % around the ESP32 through the sensors
+- Planning to further develop the web environment by adding alerts
 
 # First Milestone
 
