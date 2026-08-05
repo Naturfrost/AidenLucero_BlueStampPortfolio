@@ -13,9 +13,8 @@ The ESP32 Weather Station is an open-source weather monitoring system which uses
 
 Complete the development of the weather station, logging weather data over time and adding alerts
 https://youtu.be/ooYnj3vi2sI?si=z_g07CqPRGZ3UY5b
-<iframe width="560" height="315" src="https://www.youtube.com/embed/F7M7imOVGug" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
 
-For your final milestone, explain the outcome of your project. Key details to include are:
+Summary:
 - In this final version of the project, I went all out on displaying the updated weather system
 - Added alerts to keep track of temperature being too high or low along with light status being displayed
 - The ESP32 is also connected to an OLED screen which keeps up with tracking the data of the web server
