@@ -58,224 +58,241 @@ Here's where you'll put images of your schematics. [Tinkercad](https://www.tinke
 # Code
 Here's where you'll put your code. The syntax below places it into a block of code. Follow the guide [here]([url](https://www.markdownguide.org/extended-syntax/)) to learn how to customize it to your project needs. 
 
-```c++
-/*********
-  Rui Santos
-  Complete project details at https://randomnerdtutorials.com
+// ESP32 Weather Station with OLED
+// Install libraries:
+// Adafruit GFX Library
+// Adafruit SSD1306
 
-  Jake Pong
-  7/21/2026
-  ESP32 Dev Board 
-*********/
-
-// esp32 Wifi LED demo
-
-// Load Wi-Fi library
+#include <Arduino.h>
 #include <WiFi.h>
+#include <WebServer.h>
+#include <DHT.h>
+#include <Wire.h>
+#include <Adafruit_GFX.h>
+#include <Adafruit_SSD1306.h>
 
-// Replace with your network credentials
-const char* ssid = "SSID";
-const char* password = "PASSWORD";
-      
+const char* ssid = "Lucero-1";
+const char* password = "Roblox2011!!!";
 
-/*// Replace with your network credentials
-const char* ssid = "Enter SSID";
-const char* password = "Enter password";
-*/
+#define LDR_PIN 34
+#define DHT_PIN 4
+#define DHT_TYPE DHT11
 
-// Set web server port number to 80
-WiFiServer server(80);
+#define COLD_THRESHOLD 15.0
+#define HOT_THRESHOLD 30.0
 
-// Variable to store the HTTP request
-String header;
+#define SCREEN_WIDTH 128
+#define SCREEN_HEIGHT 64
+#define OLED_RESET -1
 
-// Auxiliar variables to store the current output state
-String output26State = "off";
-String output27State = "off";
+Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 
-// Assign output variables to GPIO pins
-const int output26 = 26;
-const int output27 = 27;
+DHT dht(DHT_PIN, DHT_TYPE);
+WebServer server(80);
 
-// Current time
-unsigned long currentTime = millis();
-// Previous time
-unsigned long previousTime = 0; 
-// Define timeout time in milliseconds (example: 2000ms = 2s)
-const long timeoutTime = 2000;
+int gLight = 0;
+float gTemp = NAN;
+float gHum = NAN;
 
-void setup() {
-  Serial.begin(115200);
-  // Initialize the output variables as outputs
-  pinMode(output26, OUTPUT);
-  pinMode(output27, OUTPUT);
-  // Set outputs to LOW
-  digitalWrite(output26, LOW);
-  digitalWrite(output27, LOW);
+unsigned long lastRead = 0;
 
-  // wifi list
-  Serial.println("Scanning WiFi...");
+void readSensors() {
+  gLight = analogRead(LDR_PIN);
 
-  int networks = WiFi.scanNetworks();
+  float t = dht.readTemperature();
+  float h = dht.readHumidity();
 
-  for (int i = 0; i < networks; i++) {
-    Serial.print(i);
-    Serial.print(": ");
-    Serial.println(WiFi.SSID(i));
+  if (!isnan(t)) gTemp = t;
+  if (!isnan(h)) gHum = h;
+}
+
+void updateOLED() {
+
+  display.clearDisplay();
+  display.setTextColor(SSD1306_WHITE);
+  display.setTextSize(1);
+  display.setCursor(0,0);
+
+  display.println("ESP32 WEATHER");
+  display.println();
+
+  display.print("Temp : ");
+  if (isnan(gTemp))
+    display.println("--");
+  else {
+    display.print(gTemp,1);
+    display.println(" C");
   }
 
-  // Connect to Wi-Fi network with SSID and password
-  Serial.print("Connecting to ");
-  Serial.println(ssid);
+  display.print("Hum  : ");
+  if (isnan(gHum))
+    display.println("--");
+  else {
+    display.print(gHum,0);
+    display.println("%");
+  }
 
-  // set wifi mode
-  WiFi.mode(WIFI_STA);
-  WiFi.disconnect();
-  delay(100);
+  display.print("Light: ");
+  display.println(gLight);
+
+  display.print("Status: ");
+
+  if (gLight < 1000)
+    display.println("Dark");
+
+  else if (gLight >= 3000)
+    display.println("Bright");
+
+  else
+    display.println("Normal");
+
+  display.println();
+
+  if (!isnan(gTemp)) {
+
+    if (gTemp <= COLD_THRESHOLD)
+      display.println("ALERT: TOO COLD");
+
+    else if (gTemp >= HOT_THRESHOLD)
+      display.println("ALERT: TOO HOT");
+
+    else
+      display.println("Weather OK");
+  }
+
+  display.display();
+}
+
+void handleRoot() {
+
+  String alert = "";
+  String bg = "#f4f4f4";
+  String lightStatus = "";
+
+  if (gLight < 1000)
+    lightStatus = "Dark";
+
+  else if (gLight >= 3000)
+    lightStatus = "Bright";
+
+  else
+    lightStatus = "Normal";
+
+  if (!isnan(gTemp)) {
+
+    if (gTemp <= COLD_THRESHOLD) {
+      bg = "#cce5ff";
+      alert = "<h2 style='color:blue'>ALERT: Weather is too cold!";
+    }
+
+    else if (gTemp >= HOT_THRESHOLD) {
+      bg = "#ffcccc";
+      alert = "<h2 style='color:red'>ALERT: Weather is too hot!";
+    }
+  }
+
+  String html =
+    "<!DOCTYPE html>"
+    "<html>"
+    "<head>"
+    "<meta http-equiv='refresh' content='2'>"
+    "<style>"
+    "body{font-family:Arial;text-align:center;background:" + bg + ";}"
+    "</style>"
+    "</head>"
+    "<body>";
+
+  html += "<h1>ESP32 Weather Station</h1>";
+  html += alert;
+
+  html += "<p><b>Temperature:</b> ";
+  html += (isnan(gTemp) ? String("--") : String(gTemp,1));
+  html += " C</p>";
+
+  html += "<p><b>Humidity:</b> ";
+  html += (isnan(gHum) ? String("--") : String(gHum,0));
+  html += " %</p>";
+
+  html += "<p><b>Light:</b> ";
+  html += String(gLight);
+  html += "</p>";
+
+  html += "<p><b>Light Status:</b> ";
+  html += lightStatus;
+  html += "</p>";
+
+  html += "</body></html>";
+
+  server.send(200, "text/html", html);
+}
+
+void handleJson() {
+
+  String j =
+    "{\"light\":" + String(gLight) +
+    ",\"temp\":" + (isnan(gTemp) ? "null" : String(gTemp,1)) +
+    ",\"hum\":" + (isnan(gHum) ? "null" : String(gHum,0)) +
+    "}";
+
+  server.send(200, "application/json", j);
+}
+
+void setup() {
+
+  Serial.begin(115200);
+
+  dht.begin();
+
+  Wire.begin(21,22);
+
+  display.begin(SSD1306_SWITCHCAPVCC, 0x3C);
+  display.clearDisplay();
+  display.setTextSize(1);
+  display.setTextColor(SSD1306_WHITE);
+  display.setCursor(0,0);
+  display.println("Starting...");
+  display.display();
 
   WiFi.begin(ssid, password);
 
-  // wifi error decode
   while (WiFi.status() != WL_CONNECTED) {
-
     delay(500);
-
-    Serial.print("WiFi status: ");
-
-    switch(WiFi.status()) {
-
-      case WL_NO_SHIELD:
-        Serial.println("No WiFi shield");
-        break;
-
-      case WL_IDLE_STATUS:
-        Serial.println("Idle");
-        break;
-
-      case WL_NO_SSID_AVAIL:
-        Serial.println("SSID not found");
-        break;
-
-      case WL_CONNECT_FAILED:
-        Serial.println("Connection failed");
-        break;
-
-      case WL_CONNECTION_LOST:
-        Serial.println("Connection lost");
-        break;
-
-      case WL_DISCONNECTED:
-        Serial.println("Disconnected");
-        break;
-
-      default:
-        Serial.println("Unknown");
-    }
+    Serial.print(".");
   }
 
-  // Print local IP address and start web server
-  Serial.println("");
-  Serial.println("WiFi connected.");
-  Serial.println("IP address: ");
+  Serial.println();
+  Serial.print("IP Address: ");
   Serial.println(WiFi.localIP());
+
+  server.on("/", handleRoot);
+  server.on("/json", handleJson);
+
   server.begin();
 }
 
-void loop(){
-  WiFiClient client = server.available();   // Listen for incoming clients
+void loop() {
 
-  if (client) {                             // If a new client connects,
-    currentTime = millis();
-    previousTime = currentTime;
-    Serial.println("New Client.");          // print a message out in the serial port
-    String currentLine = "";                // make a String to hold incoming data from the client
-    while (client.connected() && currentTime - previousTime <= timeoutTime) {  // loop while the client's connected
-      currentTime = millis();
-      if (client.available()) {             // if there's bytes to read from the client,
-        char c = client.read();             // read a byte, then
-        Serial.write(c);                    // print it out the serial monitor
-        header += c;
-        if (c == '\n') {                    // if the byte is a newline character
-          // if the current line is blank, you got two newline characters in a row.
-          // that's the end of the client HTTP request, so send a response:
-          if (currentLine.length() == 0) {
-            // HTTP headers always start with a response code (e.g. HTTP/1.1 200 OK)
-            // and a content-type so the client knows what's coming, then a blank line:
-            client.println("HTTP/1.1 200 OK");
-            client.println("Content-type:text/html");
-            client.println("Connection: close");
-            client.println();
-            
-            // turns the GPIOs on and off
-            if (header.indexOf("GET /26/on") >= 0) {
-              Serial.println("GPIO 26 on");
-              output26State = "on";
-              digitalWrite(output26, HIGH);
-            } else if (header.indexOf("GET /26/off") >= 0) {
-              Serial.println("GPIO 26 off");
-              output26State = "off";
-              digitalWrite(output26, LOW);
-            } else if (header.indexOf("GET /27/on") >= 0) {
-              Serial.println("GPIO 27 on");
-              output27State = "on";
-              digitalWrite(output27, HIGH);
-            } else if (header.indexOf("GET /27/off") >= 0) {
-              Serial.println("GPIO 27 off");
-              output27State = "off";
-              digitalWrite(output27, LOW);
-            }
-            
-            // Display the HTML web page
-            client.println("<!DOCTYPE html><html>");
-            client.println("<head><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">");
-            client.println("<link rel=\"icon\" href=\"data:,\">");
-            // CSS to style the on/off buttons 
-            // Feel free to change the background-color and font-size attributes to fit your preferences
-            client.println("<style>html { font-family: Helvetica; display: inline-block; margin: 0px auto; text-align: center;}");
-            client.println(".button { background-color: #4CAF50; border: none; color: white; padding: 16px 40px;");
-            client.println("text-decoration: none; font-size: 30px; margin: 2px; cursor: pointer;}");
-            client.println(".button2 {background-color: #555555;}</style></head>");
-            
-            // Web Page Heading
-            client.println("<body><h1>ESP32 Web Server</h1>");
-            
-            // Display current state, and ON/OFF buttons for GPIO 26  
-            client.println("<p>GPIO 26 - State " + output26State + "</p>");
-            // If the output26State is off, it displays the ON button       
-            if (output26State=="off") {
-              client.println("<p><a href=\"/26/on\"><button class=\"button\">ON</button></a></p>");
-            } else {
-              client.println("<p><a href=\"/26/off\"><button class=\"button button2\">OFF</button></a></p>");
-            } 
-               
-            // Display current state, and ON/OFF buttons for GPIO 27  
-            client.println("<p>GPIO 27 - State " + output27State + "</p>");
-            // If the output27State is off, it displays the ON button       
-            if (output27State=="off") {
-              client.println("<p><a href=\"/27/on\"><button class=\"button\">ON</button></a></p>");
-            } else {
-              client.println("<p><a href=\"/27/off\"><button class=\"button button2\">OFF</button></a></p>");
-            }
-            client.println("</body></html>");
-            
-            // The HTTP response ends with another blank line
-            client.println();
-            // Break out of the while loop
-            break;
-          } else { // if you got a newline, then clear currentLine
-            currentLine = "";
-          }
-        } else if (c != '\r') {  // if you got anything else but a carriage return character,
-          currentLine += c;      // add it to the end of the currentLine
-        }
-      }
-    }
-    // Clear the header variable
-    header = "";
-    // Close the connection
-    client.stop();
-    Serial.println("Client disconnected.");
-    Serial.println("");
+  server.handleClient();
+
+  if (millis() - lastRead > 2000) {
+
+    lastRead = millis();
+
+    readSensors();
+
+    updateOLED();
+
+    Serial.printf("Light:%d Temp:%.1fC Hum:%.0f%%\n",
+                  gLight, gTemp, gHum);
+
+    if (gLight < 1000)
+      Serial.println("Light Status: DARK");
+
+    else if (gLight >= 3000)
+      Serial.println("Light Status: BRIGHT");
+
+    else
+      Serial.println("Light Status: NORMAL");
   }
 }
 ```
