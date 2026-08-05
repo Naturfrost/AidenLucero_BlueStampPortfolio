@@ -63,6 +63,7 @@ Here's where you'll put your code. The syntax below places it into a block of co
 // Adafruit GFX Library
 // Adafruit SSD1306
 
+```c++
 #include <Arduino.h>
 #include <WiFi.h>
 #include <WebServer.h>
