@@ -1,11 +1,5 @@
   # ESP32 Weather Station
-The ESP32 Weather Station is an open-source weather monitoring system which uses wireless/environmental sensors to collect and display data on weather as well as air quality.This system is built around the ESP32 microcontroller and can be connected using WiFI. 
-
-You should comment out all portions of your portfolio that you have not completed yet, as well as any instructions:
-```HTML 
-<!--- This is an HTML comment in Markdown -->
-<!--- Anything between these symbols will not render on the published site -->
-```
+The ESP32 Weather Station is an open-source weather monitoring system which uses wireless/environmental sensors to collect and display data on weather as well as air quality. This system is built around the ESP32 microcontroller and can be connected using WiFI. I plan on using this project to expand my engineering knowledge while also contributing to an inventory system project for my local cafe.
 
 | **Engineer** | **School** | **Area of Interest** | **Grade** |
 |:--:|:--:|:--:|:--:|
@@ -18,16 +12,14 @@ You should comment out all portions of your portfolio that you have not complete
 # Final Milestone
 
 Complete the development of the weather station, logging weather data over time and adding alerts
-
+https://youtu.be/ooYnj3vi2sI?si=z_g07CqPRGZ3UY5b
 <iframe width="560" height="315" src="https://www.youtube.com/embed/F7M7imOVGug" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
 
 For your final milestone, explain the outcome of your project. Key details to include are:
-- What you've accomplished since your previous milestone
-- What your biggest challenges and triumphs were at BSE
-- A summary of key topics you learned about
-- What you hope to learn in the future after everything you've learned at BSE
-
-
+- In this final version of the project, I went all out on displaying the updated weather system
+- Added alerts to keep track of temperature being too high or low along with light status being displayed
+- The ESP32 is also connected to an OLED screen which keeps up with tracking the data of the web server
+- I plan to incorporate my experiences at BSE into the real world through my projects and future goals.
 
 # Second Milestone
 
