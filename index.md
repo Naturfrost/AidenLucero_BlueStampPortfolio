@@ -5,9 +5,8 @@ The ESP32 Weather Station is an open-source weather monitoring system which uses
 |:--:|:--:|:--:|:--:|
 | Aiden L | Oxford Academy | Mechanical/Civil Engineering | Rising Junior
 
-**Replace the BlueStamp logo below with an image of yourself and your completed project. Follow the guide [here](https://tomcam.github.io/least-github-pages/adding-images-github-pages-site.html) if you need help.**
+<img width="2880" height="2160" alt="image" src="https://github.com/user-attachments/assets/60ed09c8-bbd5-40c3-be8b-1435721d6310" />
 
-![Headstone Image](logo.svg)
   
 # Final Milestone
 
